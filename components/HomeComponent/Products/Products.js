@@ -1,39 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import Link from 'next/link'
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../actions/cart';
 
 const SingleProduct = ({ product }) => {
-    const [className, setClass] = useState("");
-    useEffect(()=>{
-        if(product.img == "img-pro-01"){
-            setClass("col-lg-3 col-md-6 special-grid best-seller")
-        } else if(product.img === "img-pro-02"){
-            setClass("col-lg-3 col-md-6 special-grid top-featured")
-        } else if(product.img === "img-pro-03"){
-            setClass("col-lg-3 col-md-6 special-grid top-featured")
-        } else {
-            setClass("col-lg-3 col-md-6 special-grid best-seller")
-        }
-    },[product.img]);
+    const dispatch = useDispatch();
     return (
-        <div className={className && className }>
+        <div className={`col-lg-3 col-md-6 special-grid ${product.tags.join(" ")}`}>
             <div className="products-single fix">
                 <div className="box-img-hover">
                     <div className="type-lb">
                         <p className={product.img === "img-pro-02" ? "new" : "sale"}>{product.status}</p>
                     </div>
-                    <img src={`assets/images/${product.img}.jpg`} className="img-fluid" alt="Image" />
+                    <img src={`/assets/images/${product.img}.jpg`} className="img-fluid" alt="Image" />
                     <div className="mask-icon">
                         <ul>
                             <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i className="fas fa-eye"></i></a></li>
                             <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i className="fas fa-sync-alt"></i></a></li>
                             <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i className="far fa-heart"></i></a></li>
                         </ul>
-                        <a className="cart" href="#">Add to Cart</a>
+                        <a className="cart" style={{cursor: 'pointer'}} onClick={() => dispatch(addToCart(product))}>Add to Cart</a>
                     </div>
                 </div>
-                <div className="why-text">
-                    <h4>{product.description}</h4>
-                    <h5> ${product.price}</h5>
-                </div>
+                <Link href="/p/[pid]" as={`/p/${product.id}`}>
+                    <a>
+                        <div className="why-text">
+                            <h4>{product.description}</h4>
+                            <h5> ${product.price.sellingPrice}</h5>
+                        </div>
+                    </a>
+                </Link>
             </div>
         </div>
     );
